@@ -3,10 +3,14 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 每日一题
-subtitle: ''
-description: 数学每日一题分享
+title: 数理视界
+subtitle: 数学与科技的奇妙碰撞
+description: 数学与科技知识分享
 keywords:
+  - 数学
+  - 科技
+  - 每日一题
+  - 学习
 author: 程炜敏
 language: zh-CN
 timezone: ''

@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: 每日一题
 subtitle: ''
-description: ''
+description: 数学每日一题分享
 keywords:
-author: John Doe
-language: en
+author: 程炜敏
+language: zh-CN
 timezone: ''
 
 # URL
@@ -96,7 +96,19 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
+
+# Markdown Configuration
+markdown:
+  plugins:
+    - markdown-it-katex
+  katex:
+    throwOnError: false
+    errorColor: "#cc0000"
+
+# Math settings
+math:
+  engine: katex
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment

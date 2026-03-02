@@ -1,0 +1,6 @@
+{
+  "build": {
+    "hexo": "npm run build"
+  },
+  "output": "public"
+}

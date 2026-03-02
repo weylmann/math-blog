@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "ghost-browser": {
+      "version": "1.0.6",
+      "installedAt": 1772362632080
+    },
+    "z-card-image": {
+      "version": "1.0.3",
+      "installedAt": 1772363355765
+    }
+  }
+}

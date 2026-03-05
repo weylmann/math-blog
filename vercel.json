@@ -1,8 +1,1 @@
-{
-  "build": {
-    "env": {
-      "HEXO_VERSION": "8.1.1"
-    }
-  },
-  "output": "public"
-}
+{}

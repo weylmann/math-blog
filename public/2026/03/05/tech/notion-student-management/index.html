@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.weylmann.cn","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="基于Notion的竞赛学生动态管理系统的设计与实践 摘要 数学竞赛教育面临着学生个体差异大、培养周期长、心理波动频繁等挑战。传统的纸质记录或通用表格工具难以满足竞赛教练对学生进行全方位、动态化管理的需求。本文提出了一套基于Notion平台构建的竞赛学生管理系统，系统整合了学生档案管理、成绩动态追踪、竞赛记录、心理辅导日志四大功能模块。通过利用Notion的数据库关联能力、模板功能和API扩展性，实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Notion的竞赛学生动态管理系统的设计与实践">
+<meta property="og:url" content="https://www.weylmann.cn/2026/03/05/tech/notion-student-management/index.html">
+<meta property="og:site_name" content="数理视界">
+<meta property="og:description" content="基于Notion的竞赛学生动态管理系统的设计与实践 摘要 数学竞赛教育面临着学生个体差异大、培养周期长、心理波动频繁等挑战。传统的纸质记录或通用表格工具难以满足竞赛教练对学生进行全方位、动态化管理的需求。本文提出了一套基于Notion平台构建的竞赛学生管理系统，系统整合了学生档案管理、成绩动态追踪、竞赛记录、心理辅导日志四大功能模块。通过利用Notion的数据库关联能力、模板功能和API扩展性，实">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-05T09:40:00.000Z">
+<meta property="article:modified_time" content="2026-03-05T09:45:14.641Z">
+<meta property="article:author" content="程炜敏">
+<meta property="article:tag" content="Notion">
+<meta property="article:tag" content="学生管理">
+<meta property="article:tag" content="教育信息化">
+<meta property="article:tag" content="竞赛数学">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://www.weylmann.cn/2026/03/05/tech/notion-student-management/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://www.weylmann.cn/2026/03/05/tech/notion-student-management/","path":"2026/03/05/tech/notion-student-management/","title":"基于Notion的竞赛学生动态管理系统的设计与实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基于Notion的竞赛学生动态管理系统的设计与实践 | 数理视界</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">数理视界</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">数学与科技的奇妙碰撞</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.header {
+  padding: 10px 0;
+  margin-bottom: 15px;
+  background: #1a1a1a;
+}
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.site-title {
+  font-size: 1.4em;
+  font-weight: 600;
+  color: #fff !important;
+  margin: 0;
+  text-decoration: none;
+}
+.site-subtitle {
+  color: #aaa !important;
+  font-size: 0.8em;
+  margin: 2px 0 0;
+}
+.header-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 3px;
+}
+.header-nav a {
+  color: #ddd !important;
+  text-decoration: none;
+  font-size: 0.9em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.header-nav a:hover {
+  color: #fff !important;
+  background: #333;
+}
+@media (max-width: 600px) {
+  .header-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .header-nav {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+</style>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <a href="/" class="site-title">数理视界</a>
+      <p class="site-subtitle">数学与科技的奇妙碰撞</p>
+    </div>
+    <nav class="header-nav">
+      <a href="/">首页</a>
+      <a href="/categories/math/">数学</a>
+      <a href="/categories/tech/">科技</a>
+      <a href="/tags/">标签</a>
+      <a href="/archives/">归档</a>
+    </nav>
+  </div>
+</div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">基于Notion的竞赛学生动态管理系统的设计与实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BC%95%E8%A8%80"><span class="nav-number">1.2.</span> <span class="nav-text">1. 引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.1 研究背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2 系统设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.3 实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BB%93%E8%AE%BA"><span class="nav-number">1.3.</span> <span class="nav-text">2. 结论</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">程炜敏</p>
+  <div class="site-description" itemprop="description">数学与科技知识分享</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">259</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">210</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.weylmann.cn/2026/03/05/tech/notion-student-management/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="程炜敏">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="数理视界">
+      <meta itemprop="description" content="数学与科技知识分享">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基于Notion的竞赛学生动态管理系统的设计与实践 | 数理视界">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于Notion的竞赛学生动态管理系统的设计与实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-05 17:40:00 / 修改时间：17:45:14" itemprop="dateCreated datePublished" datetime="2026-03-05T17:40:00+08:00">2026-03-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/tech/" itemprop="url" rel="index"><span itemprop="name">tech</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1>基于Notion的竞赛学生动态管理系统的设计与实践</h1>
+<h2 id="摘要">摘要</h2>
+<p>数学竞赛教育面临着学生个体差异大、培养周期长、心理波动频繁等挑战。传统的纸质记录或通用表格工具难以满足竞赛教练对学生进行全方位、动态化管理的需求。本文提出了一套基于Notion平台构建的竞赛学生管理系统，系统整合了学生档案管理、成绩动态追踪、竞赛记录、心理辅导日志四大功能模块。通过利用Notion的数据库关联能力、模板功能和API扩展性，实现了学生从入学到竞赛结束的完整成长轨迹记录。</p>
+<p><strong>关键词</strong>：Notion；竞赛学生管理；动态成长记录；教育信息化；个性化教学</p>
+<span id="more"></span>
+<h2 id="1-引言">1. 引言</h2>
+<h3 id="1-1-研究背景">1.1 研究背景</h3>
+<p>数学竞赛（如高中数学联赛、CMO、IMO等）是我国培养拔尖创新人才的重要途径。与常规学科教学不同，竞赛培训具有以下特点：</p>
+<p><strong>长周期培养特征明显</strong>。优秀数学竞赛选手的培养通常需要2-3年甚至更长时间。</p>
+<p><strong>个体差异显著</strong>。每个学生的知识基础、学习能力、思维方式、心理素质各不相同。</p>
+<p><strong>数据高度分散</strong>。学生的成绩信息、作业完成情况、竞赛参与记录、谈话辅导日志等散落在不同的载体中。</p>
+<h3 id="1-2-系统设计">1.2 系统设计</h3>
+<p>本系统采用四个核心数据库：</p>
+<table>
+<thead>
+<tr>
+<th>数据库</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>学生档案</td>
+<td>存储学生基本信息</td>
+</tr>
+<tr>
+<td>成绩记录</td>
+<td>追踪每次考试的成绩</td>
+</tr>
+<tr>
+<td>竞赛记录</td>
+<td>记录竞赛获奖情况</td>
+</tr>
+<tr>
+<td>谈话记录</td>
+<td>心理辅导日志</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-3-实验结果">1.3 实验结果</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>提升幅度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>信息检索效率</td>
+<td>80%+</td>
+</tr>
+<tr>
+<td>心理辅导记录覆盖率</td>
+<td>26.7% → 94.4%</td>
+</tr>
+<tr>
+<td>学生满意度</td>
+<td>显著提高</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-结论">2. 结论</h2>
+<p>本文提出的基于Notion的学生管理系统能够有效提升竞赛教练的管理效率，为个性化教学提供数据支撑。</p>
+<hr>
+<p><em>原文约12000字，详细内容请访问项目文档</em></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Notion/" rel="tag"># Notion</a>
+              <a href="/tags/%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/" rel="tag"># 学生管理</a>
+              <a href="/tags/%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E5%8C%96/" rel="tag"># 教育信息化</a>
+              <a href="/tags/%E7%AB%9E%E8%B5%9B%E6%95%B0%E5%AD%A6/" rel="tag"># 竞赛数学</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/03/math/%E6%95%B0%E5%AD%A6%E5%AD%A6%E6%B3%95%E6%8C%87%E5%AF%BC/" rel="prev" title="要学好数学这么做就可以">
+                  <i class="fa fa-angle-left"></i> 要学好数学这么做就可以
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2020 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-graduation-cap"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">数理视界</span>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

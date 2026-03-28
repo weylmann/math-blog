@@ -1,0 +1,19 @@
+name: Trigger Vercel Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Repository Dispatch to Vercel
+        run: |
+          curl -X POST https://api.vercel.com/v1/integrations/deploy/$VERCEL_DEPLOY_HOOK_ID?teamId=$VERCEL_TEAM_ID \
+            -H "Content-Type: application/json"
+        env:
+          VERCEL_DEPLOY_HOOK_ID: ${{ secrets.VERCEL_DEPLOY_HOOK_ID }}
+          VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
